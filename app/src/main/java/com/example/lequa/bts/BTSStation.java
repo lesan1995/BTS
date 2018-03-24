@@ -12,8 +12,8 @@ public class BTSStation {
 
     private double latitude;
     private double longitude;
-    private String title;
-    private String snippet;
+    private String btsName;
+    private String btsManagerName;
 
     /**
      * Set position for bts station
@@ -28,21 +28,21 @@ public class BTSStation {
 
     /**
      * Set title for bts station
-     * @param title
+     * @param btsName
      * @return
      */
-    public BTSStation title(String title){
-        this.title=title;
+    public BTSStation BTSName(String btsName){
+        this.btsName=btsName;
         return this;
     }
 
     /**
      * Set snippet for bts station
-     * @param snippet
+     * @param btsManagerName
      * @return
      */
-    public BTSStation snippet(String snippet){
-        this.snippet=snippet;
+    public BTSStation BTSManagerName(String btsManagerName){
+        this.btsManagerName=btsManagerName;
         return this;
     }
 
@@ -58,16 +58,16 @@ public class BTSStation {
      * Get title of bts station
      * @return title
      */
-    public String getTitle() {
-        return title;
+    public String getBTSName() {
+        return btsName;
     }
 
     /**
      * Get snippet of bts station
      * @return snippet
      */
-    public String getSnippet() {
-        return snippet;
+    public String getBtsManagerName() {
+        return btsManagerName;
     }
 
     /**
@@ -77,8 +77,8 @@ public class BTSStation {
     public MarkerOptions getInfo(){
         MarkerOptions inforBTS=new MarkerOptions()
                 .position(getPosition())
-                .title(title)
-                .snippet(snippet)
+                .title(btsName)
+                .snippet(btsManagerName)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                 .alpha(0.8f);
         return  inforBTS;

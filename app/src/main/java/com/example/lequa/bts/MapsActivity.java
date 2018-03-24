@@ -26,8 +26,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Show some bts station in map
      */
     public void showBTSMap(){
-        BTSStation BTS1=new BTSStation().position(16.069563,108.154690).title("BTS1").snippet("Mobifone");
-        BTSStation BTS2=new BTSStation().position(16.070205,108.153570).title("BTS2").snippet("Viettel");
+        BTSStation BTS1=new BTSStation().position(16.069563,108.154690).BTSName("BTS1").BTSManagerName("Bùi Toàn");
+        BTSStation BTS2=new BTSStation().position(16.070205,108.153570).BTSName("BTS2").BTSManagerName("Lê Tam");
         MapBTS.getInstance().addBTSStation(BTS1).addBTSStation(BTS2);
+        ImageLoadTask imgTask=new ImageLoadTask("http://hanoimoi.com.vn/Uploads/anhthu/2015/1/26/bts.jpg");
+        imgTask.execute();
     }
 }
