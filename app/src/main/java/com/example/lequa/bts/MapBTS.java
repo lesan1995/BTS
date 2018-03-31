@@ -3,13 +3,20 @@ package com.example.lequa.bts;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -28,7 +35,7 @@ public class MapBTS {
     private MapBTS(){}
     public static MapBTS getInstance(){
         if(mapBTS==null){
-            mapBTS=new MapBTS().position(new LatLng(16.069563,108.154690)).Zoom(16).Type(GoogleMap.MAP_TYPE_NORMAL);
+            mapBTS=new MapBTS().position(new LatLng(16.069563,108.154690)).Zoom(16);
         }
         return mapBTS;
     }
@@ -43,7 +50,7 @@ public class MapBTS {
         ProgressWaiting.getInstance().show(context);
         this.mapGoogle = mapGoogle;
         this.mContext=context;
-        mapGoogle.setMapType(mMapType);
+        setUpTypeMap();
         mapGoogle.getUiSettings().setZoomControlsEnabled(true);
 //        mapGoogle.setMyLocationEnabled(true);
         mCameraPosition=new CameraPosition.Builder()
@@ -58,11 +65,14 @@ public class MapBTS {
      * @return this
      */
     public MapBTS showMap(){
+        this.mapGoogle.setInfoWindowAdapter(new BTSInforWindowAdapter());
         this.mapGoogle.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
                 ProgressWaiting.getInstance().close();
+
                 mapGoogle.animateCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+
 
             }
         });
@@ -96,6 +106,7 @@ public class MapBTS {
      */
     public MapBTS Type(int mMapType){
         this.mMapType=mMapType;
+        mapGoogle.setMapType(mMapType);
         return this;
     }
 
@@ -106,6 +117,11 @@ public class MapBTS {
      */
     public MapBTS addBTSStation(BTSStation bts){
         mapGoogle.addMarker(bts.getInfo());
+        CircleOptions options=new CircleOptions();
+        options.center(bts.getPosition()).radius(bts.getRadiusCover());
+        Circle cir=mapGoogle.addCircle(options);
+        cir.setStrokeColor(Color.YELLOW);
+        cir.setFillColor(Color.GRAY);
         return this;
     }
 
@@ -126,5 +142,26 @@ public class MapBTS {
             Log.d("abc","Deo Co 1");
             showMap();
         }
+    }
+
+    /**
+     * Set up to display spinner to choose map type
+     */
+    public void setUpTypeMap(){
+        Spinner spinner_map_type=(Spinner)((Activity)mContext).findViewById(R.id.spTypeMap);
+        String arrMap[]=mContext.getResources().getStringArray(R.array.maps_type);
+        ArrayAdapter<String> adapterMap=new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_item,arrMap);
+        adapterMap.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_map_type.setAdapter(adapterMap);
+        spinner_map_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                MapBTS.getInstance().Type(i+1);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                MapBTS.getInstance().Type(1);
+            }
+        });
     }
 }

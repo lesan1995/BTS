@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">BTS</string>
     <string name="title_activity_maps">Map</string>
+    <string-array name="maps_type">
+        <item>NORMAL</item>
+        <item>SATELLITE</item>
+        <item>HYBRID</item>
+        <item>TERRAIN</item>
+    </string-array>
 </resources>

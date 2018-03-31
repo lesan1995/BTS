@@ -1,20 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@drawable/bts_info_background"
-    >
-    <TextView
-        android:id="@+id/tvStationName"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="btsStation"
+            type="com.example.lequa.bts.BTSStation"/>
+    </data>
+
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/tvManagerName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <ImageView
-        android:id="@+id/imgStation"
-        android:layout_width="200dp"
-        android:layout_height="200dp" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bts_info_background"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Station :"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tvStationName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@{btsStation.BTSName}"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Manager :"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tvManagerName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@{btsStation.btsManagerName}"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Radius :"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tvMRadiusCover"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@{btsStation.radiusCover.toString()}"
+                />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgStation"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@{btsStation.btsImage}"
+            />
+    </LinearLayout>
+
+
+</layout>

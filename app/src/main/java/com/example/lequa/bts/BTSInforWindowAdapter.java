@@ -1,11 +1,10 @@
 package com.example.lequa.bts;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
+import android.databinding.DataBindingUtil;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
+import com.example.lequa.bts.databinding.BtsInfoBinding;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
@@ -14,9 +13,9 @@ import com.google.android.gms.maps.model.Marker;
  */
 
 public class BTSInforWindowAdapter implements GoogleMap.InfoWindowAdapter {
-    private Bitmap btmp;
-    public BTSInforWindowAdapter(Bitmap bitmap){
-        this.btmp=bitmap;
+    private String TAG="BTSInforWindowAdapter";
+    public BTSInforWindowAdapter(){
+
     }
     @Override
     public View getInfoWindow(Marker marker) {
@@ -25,13 +24,14 @@ public class BTSInforWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoContents(Marker marker) {
-        View v=((Activity)MapBTS.getInstance().mContext).getLayoutInflater().inflate(R.layout.bts_info,null);
-        ImageView imgStation=(ImageView) v.findViewById(R.id.imgStation);
-        TextView tvStationName=(TextView)v.findViewById(R.id.tvStationName);
-        TextView tvManagerName=(TextView)v.findViewById(R.id.tvManagerName);
-        imgStation.setImageBitmap(btmp);
-        tvStationName.setText(marker.getTitle());
-        tvManagerName.setText(marker.getSnippet());
-        return v;
+        BTSStation btsStation=BTSStationRepo.getInstance().getBTSStation(marker.getTitle());
+        LayoutInflater inflater=((Activity)MapBTS.getInstance().mContext).getLayoutInflater();
+        BtsInfoBinding binding=DataBindingUtil.inflate(inflater,R.layout.bts_info,null,false);
+        binding.setBtsStation(btsStation);
+        binding.executePendingBindings();
+        return binding.getRoot();
+    }
+    public void bind(BTSStation btsStation){
+
     }
 }
