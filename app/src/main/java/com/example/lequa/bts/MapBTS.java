@@ -122,6 +122,7 @@ public class MapBTS {
         Circle cir=mapGoogle.addCircle(options);
         cir.setStrokeColor(Color.YELLOW);
         cir.setFillColor(Color.GRAY);
+
         return this;
     }
 

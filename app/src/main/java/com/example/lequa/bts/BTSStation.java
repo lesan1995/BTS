@@ -1,8 +1,12 @@
 package com.example.lequa.bts;
 
+import android.databinding.ViewDataBinding;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -21,6 +25,8 @@ public class BTSStation {
     private String btsName;
     private String btsManagerName;
     private String btsUrlImage;
+    public Drawable btsImage;
+    public boolean isLoadImage=false;
 
     /**
      * Set ID for bts Station
@@ -134,12 +140,11 @@ public class BTSStation {
      * Get image of bts station
      * @return
      */
-    public Drawable getBtsImage(){
-        Bitmap bmp=ImageRepo.getInstance().getImage(getBtsUrlImage());
-        Drawable drawable=null;
-        if(bmp==null) new ImageLoadTask().execute(this.getBtsUrlImage());
-        else drawable=new BitmapDrawable(bmp);
-        return drawable;
+    public void loadBTSImage(){
+        if(!isLoadImage) {
+            isLoadImage=true;
+            new ImageLoadTask().execute(this);
+        }
     }
 
 
