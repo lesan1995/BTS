@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_ca_nhan"
+            android:icon="@drawable/ic_menu_ca_nhan"
+            android:title="Cá Nhân" />
+        <item
+            android:id="@+id/nav_bao_cao"
+            android:icon="@drawable/ic_menu_bao_cao"
+            android:title="Báo Cáo" />
+    </group>
+
+    <item android:title="Cài Đặt">
+        <menu>
+            <item
+                android:id="@+id/nav_cai_dat"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Cài Đặt" />
+            <item
+                android:id="@+id/nav_giup_do"
+                android:icon="@drawable/ic_menu_giup_do"
+                android:title="Giúp Đỡ" />
+            <item
+                android:id="@+id/nav_gop_y"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Góp Ý" />
+            <item
+                android:id="@+id/nav_dieu_khoan"
+                android:icon="@drawable/ic_menu_dieu_khoan"
+                android:title="Điều Khoản" />
+            <item
+                android:id="@+id/nav_dang_xuat"
+                android:icon="@drawable/ic_menu_dang_xuat"
+                android:title="Đăng Xuất" />
+        </menu>
+    </item>
+
+</menu>
