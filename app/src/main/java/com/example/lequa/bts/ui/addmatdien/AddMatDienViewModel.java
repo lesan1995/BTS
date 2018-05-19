@@ -30,7 +30,8 @@ public class AddMatDienViewModel extends ViewModel {
     public LiveData<Resource<MatDien>> getResultInsertMatDien(){
         return this.resultInsertMatDien;
     }
-    public void setInsertMatDien(MatDien matDien){
+    public void setInsertMatDien(String token,MatDien matDien){
+        this.token.setValue(token);
         this.matDien.setValue(matDien);
     }
 }

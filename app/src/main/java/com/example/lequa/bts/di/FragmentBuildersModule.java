@@ -1,22 +1,28 @@
 package com.example.lequa.bts.di;
 
 import com.example.lequa.bts.ui.addmatdien.AddMatDienFragment;
+import com.example.lequa.bts.ui.addnhatky.AddNhatKyFragment;
 import com.example.lequa.bts.ui.addnhatram.AddNhaTramFragment;
 import com.example.lequa.bts.ui.addtaikhoan.AddTaiKhoanFragment;
 import com.example.lequa.bts.ui.addtram.AddTramFragment;
+import com.example.lequa.bts.ui.baocao.BaoCaoFragment;
 import com.example.lequa.bts.ui.canhan.CaNhanFragment;
 import com.example.lequa.bts.ui.changepassword.ChangePasswordFragment;
 import com.example.lequa.bts.ui.chitietmatdien.ChiTietMatDienFragment;
 import com.example.lequa.bts.ui.chittiettaikhoan.ChiTietTaiKhoanFragment;
+import com.example.lequa.bts.ui.dsmang.DSMangFragment;
 import com.example.lequa.bts.ui.dsmatdien.DSMatDienFragment;
+import com.example.lequa.bts.ui.dsnhatky.DSNhatKyFragment;
 import com.example.lequa.bts.ui.dstram.DSTramFragment;
 import com.example.lequa.bts.ui.editcanhan.EditCaNhanFragment;
 import com.example.lequa.bts.ui.edittoado.EditToaDoFragment;
 import com.example.lequa.bts.ui.hinhanh.HinhAnhFragment;
 import com.example.lequa.bts.ui.login.LoginFragment;
 import com.example.lequa.bts.ui.map.MainFragment;
+import com.example.lequa.bts.ui.nhatky.NhatKyFragment;
 import com.example.lequa.bts.ui.nhatram.NhaTramFragment;
 import com.example.lequa.bts.ui.taikhoan.TaiKhoanFragment;
+import com.example.lequa.bts.ui.thongtin.ThongTinFragment;
 import com.example.lequa.bts.ui.toado.ToaDo;
 import com.example.lequa.bts.ui.tram.TramFragment;
 
@@ -63,5 +69,17 @@ public abstract class FragmentBuildersModule {
     abstract ChiTietMatDienFragment contributeChiTietMatDienFragment();
     @ContributesAndroidInjector
     abstract AddMatDienFragment contributeAddMatDienFragment();
+    @ContributesAndroidInjector
+    abstract DSMangFragment contributeDSMangFragment();
+    @ContributesAndroidInjector
+    abstract DSNhatKyFragment contributeDSNhatKyFragment();
+    @ContributesAndroidInjector
+    abstract NhatKyFragment contributeNhatKyFragment();
+    @ContributesAndroidInjector
+    abstract BaoCaoFragment contributeBaoCaoFragment();
+    @ContributesAndroidInjector
+    abstract AddNhatKyFragment contributeAddNhatKyFragment();
+    @ContributesAndroidInjector
+    abstract ThongTinFragment contributeThongTinFragment();
 
 }

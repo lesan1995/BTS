@@ -4,6 +4,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+
+import com.example.lequa.bts.model.NhaMang;
 import com.example.lequa.bts.model.Tram;
 import com.example.lequa.bts.model.UserBTS;
 import com.example.lequa.bts.repository.MainRespository;
@@ -17,10 +19,12 @@ public class MainViewModel extends ViewModel {
     final MutableLiveData<String> email = new MutableLiveData<>();
     final MutableLiveData<Integer> deleteTram = new MutableLiveData<>();
     final MutableLiveData<Boolean> isDeleteTram = new MutableLiveData<>();
+    final MutableLiveData<Boolean> displayListNhaMang = new MutableLiveData<>();
     private final LiveData<Resource<UserBTS>> user;
     private final LiveData<Resource<List<Tram>>> listTram;
     private final LiveData<Resource<Tram>> resultDeleteTram;
     private final LiveData<Resource<List<UserBTS>>> listUser;
+    private final LiveData<Resource<List<NhaMang>>> listNhaMang;
     @Inject
     public MainViewModel(MainRespository mainRespository){
         user= Transformations.switchMap(token, token->{
@@ -55,6 +59,14 @@ public class MainViewModel extends ViewModel {
                 return mainRespository.getAllUser(token);
             }
         });
+        listNhaMang= Transformations.switchMap(displayListNhaMang, displayListNhaMang->{
+            if(displayListNhaMang==null){
+                return AbsentLiveData.create();
+
+            }else{
+                return mainRespository.getListNhaMang(token.getValue());
+            }
+        });
     }
     public LiveData<Resource<UserBTS>> getUser(){
         return this.user;
@@ -68,6 +80,9 @@ public class MainViewModel extends ViewModel {
     public LiveData<Resource<List<UserBTS>>> getListUser(){
         return this.listUser;
     }
+    public LiveData<Resource<List<NhaMang>>> getListNhaMang(){
+        return this.listNhaMang;
+    }
     public void setUser(String email,String token){
         this.token.setValue(token);
         this.email.setValue(email);
@@ -75,5 +90,8 @@ public class MainViewModel extends ViewModel {
     public void setDeleteTram(int idTram,boolean isDeleteTram){
         this.deleteTram.setValue(idTram);
         this.isDeleteTram.setValue(isDeleteTram);
+    }
+    public void setDisplayListNhaMang(boolean displayListNhaMang){
+        this.displayListNhaMang.setValue(displayListNhaMang);
     }
 }

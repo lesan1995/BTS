@@ -17,7 +17,7 @@ public interface MatDienService {
     LiveData<ApiResponse<List<MatDien>>> getMatDiens(@Header("Authorization") String token);
     @GET("api/MatDiens/{id}")
     LiveData<ApiResponse<MatDien>> getMatDiens(@Header("Authorization") String token, @Query("id") String id);
-    @GET("api/GetMatDienByIDTram")
+    @GET("api/MatDienByIDTram")
     LiveData<ApiResponse<List<MatDien>>> getMatDienByIDTram(@Header("Authorization") String token, @Query("id") String id);
     @POST("api/MatDiens")
     LiveData<ApiResponse<MatDien>> postMatDiens(@Header("Authorization") String token,@Body MatDien matDien);

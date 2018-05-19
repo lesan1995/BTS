@@ -17,6 +17,6 @@ public class FragmentBindingAdapters {
     }
     @BindingAdapter("imageUrl")
     public void bindImage(ImageView imageView, String url) {
-        Glide.with(fragment).load("http://192.168.137.1:57219/image/"+url).into(imageView);
+        Glide.with(fragment).load("http://serverbts220180515045504.azurewebsites.net/image/"+url).into(imageView);
     }
 }

@@ -6,22 +6,28 @@ import android.util.Log;
 import com.example.lequa.bts.HomeActivity;
 import com.example.lequa.bts.R;
 import com.example.lequa.bts.ui.addmatdien.AddMatDienFragment;
+import com.example.lequa.bts.ui.addnhatky.AddNhatKyFragment;
 import com.example.lequa.bts.ui.addnhatram.AddNhaTramFragment;
 import com.example.lequa.bts.ui.addtaikhoan.AddTaiKhoanFragment;
 import com.example.lequa.bts.ui.addtram.AddTramFragment;
+import com.example.lequa.bts.ui.baocao.BaoCaoFragment;
 import com.example.lequa.bts.ui.canhan.CaNhanFragment;
 import com.example.lequa.bts.ui.changepassword.ChangePasswordFragment;
 import com.example.lequa.bts.ui.chitietmatdien.ChiTietMatDienFragment;
 import com.example.lequa.bts.ui.chittiettaikhoan.ChiTietTaiKhoanFragment;
+import com.example.lequa.bts.ui.dsmang.DSMangFragment;
 import com.example.lequa.bts.ui.dsmatdien.DSMatDienFragment;
+import com.example.lequa.bts.ui.dsnhatky.DSNhatKyFragment;
 import com.example.lequa.bts.ui.dstram.DSTramFragment;
 import com.example.lequa.bts.ui.editcanhan.EditCaNhanFragment;
 import com.example.lequa.bts.ui.edittoado.EditToaDoFragment;
 import com.example.lequa.bts.ui.hinhanh.HinhAnhFragment;
 import com.example.lequa.bts.ui.login.LoginFragment;
 import com.example.lequa.bts.ui.map.MainFragment;
+import com.example.lequa.bts.ui.nhatky.NhatKyFragment;
 import com.example.lequa.bts.ui.nhatram.NhaTramFragment;
 import com.example.lequa.bts.ui.taikhoan.TaiKhoanFragment;
+import com.example.lequa.bts.ui.thongtin.ThongTinFragment;
 import com.example.lequa.bts.ui.toado.ToaDo;
 import com.example.lequa.bts.ui.tram.TramFragment;
 
@@ -202,6 +208,54 @@ public class NavigationController {
         AddMatDienFragment addMatDienFragment = AddMatDienFragment.create(idTram,token);
         fragmentManager.beginTransaction()
                 .replace(containerId, addMatDienFragment, tag)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+    public void navigateToDSMang(String token) {
+        String tag = "dsmang" +"/"+token;
+        DSMangFragment dsMangFragment =DSMangFragment.create(token);
+        fragmentManager.beginTransaction()
+                .replace(containerId, dsMangFragment,tag)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+    public void navigateToDSNhatKy(String idTram,String cv,String token) {
+        String tag = "dsnhatky" + "/" + idTram+"/"+token+"/"+cv;
+        DSNhatKyFragment dsNhatKyFragment = DSNhatKyFragment.create(idTram,cv,token);
+        fragmentManager.beginTransaction()
+                .replace(containerId, dsNhatKyFragment, tag)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+    public void navigateToNhatKy(String idNhatKy,String token) {
+        String tag = "nhatky" + "/" + idNhatKy+"/"+token;
+        NhatKyFragment nhatKyFragment = NhatKyFragment.create(idNhatKy,token);
+        fragmentManager.beginTransaction()
+                .replace(containerId, nhatKyFragment, tag)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+    public void navigateToBaoCao(String cv,String token) {
+        String tag = "baocao" + "/" + token+"/"+cv;
+        BaoCaoFragment baoCaoFragment = BaoCaoFragment.create(cv,token);
+        fragmentManager.beginTransaction()
+                .replace(containerId, baoCaoFragment, tag)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+    public void navigateToAddNhatKy(String idTram,String token) {
+        String tag = "addnhatky" + "/" + idTram+"/"+token;
+        AddNhatKyFragment addNhatKyFragment = AddNhatKyFragment.create(idTram,token);
+        fragmentManager.beginTransaction()
+                .replace(containerId, addNhatKyFragment, tag)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+    public void navigateToThongTin() {
+        String tag = "thongtin";
+        ThongTinFragment thongTinFragment = ThongTinFragment.create();
+        fragmentManager.beginTransaction()
+                .replace(containerId, thongTinFragment, tag)
                 .addToBackStack(null)
                 .commitAllowingStateLoss();
     }

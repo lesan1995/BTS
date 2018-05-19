@@ -4,20 +4,25 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import com.example.lequa.bts.ui.addmatdien.AddMatDienViewModel;
+import com.example.lequa.bts.ui.addnhatky.AddNhatKyViewModel;
 import com.example.lequa.bts.ui.addnhatram.AddNhaTramViewModel;
 import com.example.lequa.bts.ui.addtaikhoan.AddTaiKhoanViewModel;
 import com.example.lequa.bts.ui.addtram.AddTramViewModel;
+import com.example.lequa.bts.ui.baocao.BaoCaoViewModel;
 import com.example.lequa.bts.ui.canhan.CaNhanViewModel;
 import com.example.lequa.bts.ui.changepassword.ChangePasswordViewModel;
 import com.example.lequa.bts.ui.chitietmatdien.ChiTietMatDienViewModel;
 import com.example.lequa.bts.ui.chittiettaikhoan.ChiTietTaiKhoanViewModel;
+import com.example.lequa.bts.ui.dsmang.DSMangViewModel;
 import com.example.lequa.bts.ui.dsmatdien.DSMatDienViewModel;
+import com.example.lequa.bts.ui.dsnhatky.DSNhatKyViewModel;
 import com.example.lequa.bts.ui.dstram.DSTramViewModel;
 import com.example.lequa.bts.ui.editcanhan.EditCaNhanViewModel;
 import com.example.lequa.bts.ui.edittoado.EditToaDoViewModel;
 import com.example.lequa.bts.ui.hinhanh.HinhAnhViewModel;
 import com.example.lequa.bts.ui.login.LoginViewModel;
 import com.example.lequa.bts.ui.map.MainViewModel;
+import com.example.lequa.bts.ui.nhatky.NhatKyViewModel;
 import com.example.lequa.bts.ui.nhatram.NhaTramViewModel;
 import com.example.lequa.bts.ui.taikhoan.TaiKhoanViewModel;
 import com.example.lequa.bts.ui.toado.ToaDoViewModel;
@@ -105,6 +110,26 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AddMatDienViewModel.class)
     abstract ViewModel bindAddMatDienViewModel(AddMatDienViewModel addMatDienViewModel);
+    @Binds
+    @IntoMap
+    @ViewModelKey(DSMangViewModel.class)
+    abstract ViewModel bindDSMangViewModel(DSMangViewModel dsMangViewModel);
+    @Binds
+    @IntoMap
+    @ViewModelKey(DSNhatKyViewModel.class)
+    abstract ViewModel bindDSNhatKyViewModel(DSNhatKyViewModel dsNhatKyViewModel);
+    @Binds
+    @IntoMap
+    @ViewModelKey(NhatKyViewModel.class)
+    abstract ViewModel bindNhatKyViewModel(NhatKyViewModel nhatKyViewModel);
+    @Binds
+    @IntoMap
+    @ViewModelKey(BaoCaoViewModel.class)
+    abstract ViewModel bindBaoCaoViewModel(BaoCaoViewModel baoCaoViewModel);
+    @Binds
+    @IntoMap
+    @ViewModelKey(AddNhatKyViewModel.class)
+    abstract ViewModel bindAddNhatKyViewModel(AddNhatKyViewModel addNhatKyViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(BTSViewModelFactory factory);

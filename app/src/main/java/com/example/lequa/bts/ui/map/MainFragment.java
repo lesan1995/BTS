@@ -39,7 +39,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.lequa.bts.R;
@@ -48,6 +50,7 @@ import com.example.lequa.bts.databinding.FragmentMainBinding;
 import com.example.lequa.bts.databinding.NavHeaderMainBinding;
 import com.example.lequa.bts.databinding.ItemTramBinding;
 import com.example.lequa.bts.di.Injectable;
+import com.example.lequa.bts.model.NhaMang;
 import com.example.lequa.bts.model.NhaTram;
 import com.example.lequa.bts.model.Tram;
 import com.example.lequa.bts.model.UserBTS;
@@ -229,21 +232,19 @@ public class MainFragment extends Fragment
             navigationController.navigateToDSTram(getArguments().getString(MAIN_TOKEN_KEY));
 
         } else if (id == R.id.nav_nha_mang) {
+            navigationController.navigateToDSMang(getArguments().getString(MAIN_TOKEN_KEY));
+        }
+//        } else if (id == R.id.nav_tim_nang_cao) {
+//            //showNhaMang();
+//
+//        } else if (id == R.id.nav_mat_dien) {
+//
+//        }
+        else if (id == R.id.nav_bao_cao) {
+            navigationController.navigateToBaoCao(getArguments().getString(MAIN_CV_KEY),getArguments().getString(MAIN_TOKEN_KEY));
 
-
-        } else if (id == R.id.nav_tim_nang_cao) {
-
-        } else if (id == R.id.nav_mat_dien) {
-
-        } else if (id == R.id.nav_bao_cao) {
-
-        } else if (id == R.id.nav_cai_dat) {
-
-        } else if (id == R.id.nav_giup_do) {
-
-        } else if (id == R.id.nav_gop_y) {
-
-        } else if (id == R.id.nav_dieu_khoan) {
+        }  else if (id == R.id.nav_thong_tin) {
+            navigationController.navigateToThongTin();
 
         } else if (id == R.id.nav_dang_xuat) {
             navigationController.navigateToLogin(true);
@@ -432,6 +433,27 @@ public class MainFragment extends Fragment
 
         super.onCreateOptionsMenu(menu, inflater);
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_normal:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                return true;
+            case R.id.action_satellite:
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                return true;
+            case R.id.action_hybrid:
+                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                return true;
+            case R.id.action_terrain:
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                return true;
+            default:
+                break;
+        }
+
+        return false;
+    }
 
     @OnClick(R.id.fab_chi_tiet_tram)
     public void showChiTietTram() {
@@ -455,6 +477,10 @@ public class MainFragment extends Fragment
     @OnClick(R.id.fab_mat_dien)
     public void showMatDien(){
         navigationController.navigateToDSMatDien(idMarkerClick,getArguments().getString(MAIN_CV_KEY), getArguments().getString(MAIN_TOKEN_KEY));
+    }
+    @OnClick(R.id.fab_nhat_ky)
+    public void showNhatKy(){
+        navigationController.navigateToDSNhatKy(idMarkerClick,getArguments().getString(MAIN_CV_KEY), getArguments().getString(MAIN_TOKEN_KEY));
     }
     public void deleteTram(int idTram){
         AlertDialog.Builder builder;
@@ -534,6 +560,38 @@ public class MainFragment extends Fragment
             }
 
         }
+    }
+    public void showNhaMang(){
+        AlertDialog.Builder mBuilder ;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mBuilder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            mBuilder = new AlertDialog.Builder(getContext());
+        }
+        View mView = getLayoutInflater().inflate(R.layout.popup_list_nha_mang, null);
+        mBuilder.setView(mView);
+        AlertDialog dialog = mBuilder.create();
+        dialog.show();
+        Spinner spNhaMang=mView.findViewById(R.id.spNhaMang);
+        Button btnChon=mView.findViewById(R.id.btnChonNhaMang);
+        btnChon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NhaMang nhaMang=((NhaMangAdapter)spNhaMang.getAdapter()).getListData().get(spNhaMang.getSelectedItemPosition());
+                Toast.makeText(getActivity().getApplicationContext(),nhaMang.getIDNhaMang()+"",Toast.LENGTH_LONG).show();
+//                Tram tram=tramBinding.get().getTram();
+//                tram.setIDQuanLy(userBTS.getIDUser());
+//                tramViewModel.setUpdateTram(tram);
+                dialog.dismiss();
+            }
+        });
+
+        mainViewModel.setDisplayListNhaMang(true);
+        mainViewModel.getListNhaMang().observe(this,listNhaMang->{
+            if(listNhaMang.status==Status.SUCCESS){
+                spNhaMang.setAdapter(new NhaMangAdapter(getContext(),listNhaMang.data));
+            }
+        });
     }
 
 }

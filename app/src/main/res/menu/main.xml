@@ -7,4 +7,24 @@
         android:title="Tìm kiếm Trạm"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="collapseActionView|always" />
+    <item
+        android:id="@+id/action_normal"
+        android:orderInCategory="100"
+        android:title="Normal"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_satellite"
+        android:orderInCategory="100"
+        android:title="Satellite"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_hybrid"
+        android:orderInCategory="100"
+        android:title="Hybrid"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_terrain"
+        android:orderInCategory="100"
+        android:title="Terrain"
+        app:showAsAction="never" />
 </menu>

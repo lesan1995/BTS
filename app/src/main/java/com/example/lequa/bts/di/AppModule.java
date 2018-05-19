@@ -8,6 +8,7 @@ import com.example.lequa.bts.api.LoginService;
 import com.example.lequa.bts.api.MatDienService;
 import com.example.lequa.bts.api.NhaMangService;
 import com.example.lequa.bts.api.NhaTramService;
+import com.example.lequa.bts.api.NhatKyService;
 import com.example.lequa.bts.api.PasswordService;
 import com.example.lequa.bts.api.RegisterService;
 import com.example.lequa.bts.api.TramService;
@@ -18,6 +19,7 @@ import com.example.lequa.bts.db.MatDienDAO;
 import com.example.lequa.bts.db.MyDatabase;
 import com.example.lequa.bts.db.NhaMangDAO;
 import com.example.lequa.bts.db.NhaTramDAO;
+import com.example.lequa.bts.db.NhatKyDAO;
 import com.example.lequa.bts.db.TramDAO;
 import com.example.lequa.bts.db.UserDAO;
 import com.example.lequa.bts.tinh.TinhUtil;
@@ -65,6 +67,10 @@ class AppModule {
         return ApiUtils.getMatDienService();
     }
     @Singleton @Provides
+    NhatKyService provideNhatKyService(){
+        return ApiUtils.getNhatKyService();
+    }
+    @Singleton @Provides
     MyDatabase provideDb(Application app) {
         return Room.databaseBuilder(app, MyDatabase.class,"bts.db").build();
     }
@@ -95,6 +101,10 @@ class AppModule {
     @Singleton @Provides
     MatDienDAO provideMatDienDao(MyDatabase db) {
         return db.matDienDAO();
+    }
+    @Singleton @Provides
+    NhatKyDAO provideNhatKyDao(MyDatabase db) {
+        return db.nhatKyDAO();
     }
     @Singleton @Provides
     TinhUtil provideTinhUtil(Application app){

@@ -1,7 +1,7 @@
 package com.example.lequa.bts.api;
 
 public class ApiUtils {
-    public static final String BASE_URL = "http://192.168.137.1:57219/";
+    public static final String BASE_URL = "http://serverbts220180515045504.azurewebsites.net/";
     public static LoginService getLoginService() {
         return RetrofitClient.getClient(BASE_URL).create(LoginService.class);
     }
@@ -28,5 +28,8 @@ public class ApiUtils {
     }
     public static MatDienService getMatDienService() {
         return RetrofitClient.getClient(BASE_URL).create(MatDienService.class);
+    }
+    public static NhatKyService getNhatKyService() {
+        return RetrofitClient.getClient(BASE_URL).create(NhatKyService.class);
     }
 }

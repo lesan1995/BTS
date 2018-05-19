@@ -23,7 +23,7 @@ public class MatDien {
     @SerializedName("TongThoiGianChay")
     private String tongThoiGianChay;
     @SerializedName("QuangDuongDiChuyen")
-    private Integer quangDuongDiChuyen;
+    private Double quangDuongDiChuyen;
     @SerializedName("TienPhat")
     private Integer tienPhat;
 
@@ -45,7 +45,7 @@ public class MatDien {
      * @param iDMatDien
      * @param thoiGianMayNo
      */
-    public MatDien(Integer iDMatDien, Integer iDTram, String ngayMatDien, String gioMatDien, String thoiGianMayNo, String thoiGianNgung, String tongThoiGianChay, Integer quangDuongDiChuyen, Integer tienPhat) {
+    public MatDien(Integer iDMatDien, Integer iDTram, String ngayMatDien, String gioMatDien, String thoiGianMayNo, String thoiGianNgung, String tongThoiGianChay, Double quangDuongDiChuyen, Integer tienPhat) {
         this.iDMatDien = iDMatDien;
         this.iDTram = iDTram;
         this.ngayMatDien = ngayMatDien;
@@ -113,11 +113,11 @@ public class MatDien {
         this.tongThoiGianChay = tongThoiGianChay;
     }
 
-    public Integer getQuangDuongDiChuyen() {
+    public Double getQuangDuongDiChuyen() {
         return quangDuongDiChuyen;
     }
 
-    public void setQuangDuongDiChuyen(Integer quangDuongDiChuyen) {
+    public void setQuangDuongDiChuyen(Double quangDuongDiChuyen) {
         this.quangDuongDiChuyen = quangDuongDiChuyen;
     }
 

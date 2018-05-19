@@ -1,6 +1,7 @@
 package com.example.lequa.bts.ui.addmatdien;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
@@ -15,11 +16,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.lequa.bts.R;
 import com.example.lequa.bts.databinding.FragmentAddMatDienBinding;
 import com.example.lequa.bts.di.Injectable;
+import com.example.lequa.bts.model.MatDien;
 import com.example.lequa.bts.util.AutoClearedValue;
 import com.example.lequa.bts.vo.Status;
 
@@ -39,13 +43,10 @@ public class AddMatDienFragment extends Fragment implements Injectable {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
     private AddMatDienViewModel addMatDienViewModel;
-    private String ngayMatDien="";
-    private String ngayMayNo="";
-    private String ngayNgung="";
-    private int ngayCurrent,thangCurrent,namCurrent;
-    private int ngayMD,thangMD,namMD;
-    private int ngayMN,thangMN,namMN;
-    private int ngayNG,thangNG,namNG;
+
+    private static final String TIME="time";
+    private static final String DATETIME="datetime";
+    private static Calendar calThoiGianMat,calThoiGianBat,calThoiGianTat;
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -70,28 +71,42 @@ public class AddMatDienFragment extends Fragment implements Injectable {
                 }
             }
         });
-        getTimeCurrent();
+        initTime();
     }
-    public void setBack(Toolbar toolbar){
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                thoat();
-            }
-        });
-    }
-    @OnClick(R.id.btnThoat)
-    public void thoat(){
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
-        } else {
-            getActivity().onBackPressed();
-        }
-    }
+
     @OnClick(R.id.btnLuu)
     public void luu(){
-
+        if(!validate()) return;
+        MatDien matDien=new MatDien();
+        matDien.setIDMatDien(0);
+        matDien.setIDTram(Integer.parseInt(getArguments().getString(ADD_MAT_DIEN_ID_TRAM_KEY)));
+        matDien.setNgayMatDien(calThoiGianMat.get(Calendar.YEAR)+"-"+(calThoiGianMat.get(Calendar.MONTH)+1)+"-"+calThoiGianMat.get(Calendar.DAY_OF_MONTH));
+        matDien.setGioMatDien(calThoiGianMat.get(Calendar.HOUR_OF_DAY)+":"+calThoiGianMat.get(Calendar.MINUTE));
+        matDien.setThoiGianMayNo(calThoiGianBat.get(Calendar.YEAR)+"-"+(calThoiGianBat.get(Calendar.MONTH)+1)+"-"+calThoiGianBat.get(Calendar.DAY_OF_MONTH)+" "+calThoiGianBat.get(Calendar.HOUR_OF_DAY)+":"+calThoiGianBat.get(Calendar.MINUTE));
+        matDien.setThoiGianNgung(calThoiGianTat.get(Calendar.YEAR)+"-"+(calThoiGianTat.get(Calendar.MONTH)+1)+"-"+calThoiGianTat.get(Calendar.DAY_OF_MONTH)+" "+calThoiGianTat.get(Calendar.HOUR_OF_DAY)+":"+calThoiGianTat.get(Calendar.MINUTE));
+        matDien.setQuangDuongDiChuyen(Double.parseDouble(addMatDienBinding.get().edQuangDuong.getText().toString()));
+        addMatDienViewModel.setInsertMatDien(getArguments().getString(ADD_MAT_DIEN_TOKEN_KEY),matDien);
+    }
+    public boolean validate(){
+        if(calThoiGianMat.after(calThoiGianBat)){
+            Toast.makeText(getActivity().getApplicationContext(),"Thời gian mất điện phải trước thời gian bật máy nỗ",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(calThoiGianBat.after(calThoiGianTat)){
+            Toast.makeText(getActivity().getApplicationContext(),"Thời gian bật máy nỗ phải trước thời gian tắt máy nỗ",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        Date dateCurrent = Calendar.getInstance().getTime();
+        Calendar timeCurrent=Calendar.getInstance();timeCurrent.setTime(dateCurrent);
+        if(calThoiGianBat.after(timeCurrent)){
+            Toast.makeText(getActivity().getApplicationContext(),"Thời gian tắt máy nỗ phải trước thời gian hiện tại",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(Double.parseDouble(addMatDienBinding.get().edQuangDuong.getText().toString())<=0){
+            Toast.makeText(getActivity().getApplicationContext(),"Quãng đường di chuyển phải lớn hơn 0",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
     @Nullable
     @Override
@@ -111,135 +126,134 @@ public class AddMatDienFragment extends Fragment implements Injectable {
         addMatDienFragment.setArguments(args);
         return addMatDienFragment;
     }
-    @OnClick(R.id.btnNgayMatDien)
-    public void ChonNgayMatDien(){
-        getDate(addMatDienBinding.get().tvNgayMatDien.getText().toString(),1);
-        final DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+    public void setBack(Toolbar toolbar){
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                thoat();
+            }
+        });
+    }
+    @OnClick(R.id.btnThoat)
+    public void thoat(){
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        } else {
+            getActivity().onBackPressed();
+        }
+    }
+    public void initTime(){
+        Date dateCurrent = Calendar.getInstance().getTime();
+        calThoiGianMat=Calendar.getInstance();calThoiGianMat.setTime(dateCurrent);
+        setTimeForTextView(addMatDienBinding.get().tvGioMatDien,calThoiGianMat,TIME);
+        setTimeForTextView(addMatDienBinding.get().tvNgayMatDien,calThoiGianMat,DATETIME);
+        calThoiGianBat=Calendar.getInstance();calThoiGianBat.setTime(dateCurrent);
+        setTimeForTextView(addMatDienBinding.get().tvGioMayNo,calThoiGianBat,TIME);
+        setTimeForTextView(addMatDienBinding.get().tvNgayMayNo,calThoiGianBat,DATETIME);
+        calThoiGianTat=Calendar.getInstance();calThoiGianTat.setTime(dateCurrent);
+        setTimeForTextView(addMatDienBinding.get().tvGioNgung,calThoiGianTat,TIME);
+        setTimeForTextView(addMatDienBinding.get().tvNgayNgung,calThoiGianTat,DATETIME);
+    }
+    public void setTimeForTextView(TextView textView, Calendar cal,String type){
+        switch (type){
+            case TIME:
+                String hour=cal.get(Calendar.HOUR_OF_DAY)+""; if(hour.length()==1) hour="0"+hour;
+                String minute=cal.get(Calendar.MINUTE)+""; if(minute.length()==1) minute="0"+minute;
+                textView.setText(hour+":"+minute);
+                break;
+            case DATETIME:
+                String day=cal.get(Calendar.DAY_OF_MONTH)+""; if(day.length()==1) day="0"+day;
+                String month=(cal.get(Calendar.MONTH)+1)+""; if(month.length()==1) month="0"+month;
+                String year=cal.get(Calendar.YEAR)+"";
+                textView.setText(day+"/"+month+"/"+year);
+                break;
+        }
+    }
+    @OnClick(R.id.btnGioMatDien)
+    public void chonGioMatDien(){
+        final TimePickerDialog.OnTimeSetListener mTimeSetListener=new TimePickerDialog.OnTimeSetListener(){
 
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                calThoiGianMat.set(Calendar.HOUR_OF_DAY, i);
+                calThoiGianMat.set(Calendar.MINUTE, i1);
+                setTimeForTextView(addMatDienBinding.get().tvGioMatDien,calThoiGianMat,TIME);
             }
         };
 
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), mDateSetListener, namMD, thangMD, ngayMD);
+        TimePickerDialog tp1 = new TimePickerDialog(getContext(), mTimeSetListener, calThoiGianMat.get(Calendar.HOUR_OF_DAY), calThoiGianMat.get(Calendar.MINUTE), true);
+        tp1.show();
+    }
+    @OnClick(R.id.btnGioMayNo)
+    public void chonGioMayNo(){
+        final TimePickerDialog.OnTimeSetListener mTimeSetListener=new TimePickerDialog.OnTimeSetListener(){
 
-        datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Chọn",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_POSITIVE) {
-                            DatePicker datePicker = datePickerDialog.getDatePicker();
-                            addMatDienBinding.get().tvNgayMatDien.
-                                    setText(datePicker.getDayOfMonth() + "/" + (datePicker.getMonth() + 1) + "/" + datePicker.getYear());
-                            ngayMatDien=datePicker.getYear() + "/" + (datePicker.getMonth() + 1) + "/" + datePicker.getDayOfMonth();
-                        }
-                    }
-                });
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Hủy", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                calThoiGianBat.set(Calendar.HOUR_OF_DAY, i);
+                calThoiGianBat.set(Calendar.MINUTE, i1);
+                setTimeForTextView(addMatDienBinding.get().tvGioMayNo,calThoiGianBat,TIME);
             }
-        });
+        };
+
+        TimePickerDialog tp1 = new TimePickerDialog(getContext(), mTimeSetListener, calThoiGianBat.get(Calendar.HOUR_OF_DAY), calThoiGianBat.get(Calendar.MINUTE), true);
+        tp1.show();
+    }
+    @OnClick(R.id.btnGioNgung)
+    public void chonGioNgung(){
+        final TimePickerDialog.OnTimeSetListener mTimeSetListener=new TimePickerDialog.OnTimeSetListener(){
+
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                calThoiGianTat.set(Calendar.HOUR_OF_DAY, i);
+                calThoiGianTat.set(Calendar.MINUTE, i1);
+                setTimeForTextView(addMatDienBinding.get().tvGioNgung,calThoiGianTat,TIME);
+            }
+        };
+
+        TimePickerDialog tp1 = new TimePickerDialog(getContext(), mTimeSetListener, calThoiGianTat.get(Calendar.HOUR_OF_DAY), calThoiGianTat.get(Calendar.MINUTE), true);
+        tp1.show();
+    }
+    @OnClick(R.id.btnNgayMatDien)
+    public void ChonNgayMatDien(){
+        final DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                calThoiGianMat.set(Calendar.YEAR,year);calThoiGianMat.set(Calendar.MONTH,monthOfYear);
+                calThoiGianMat.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+                setTimeForTextView(addMatDienBinding.get().tvNgayMatDien,calThoiGianMat,DATETIME);
+            }
+        };
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), mDateSetListener,
+                calThoiGianMat.get(Calendar.YEAR), calThoiGianMat.get(Calendar.MONTH), calThoiGianMat.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
     @OnClick(R.id.btnNgayMayNo)
     public void ChonNgayMayNo(){
-        getDate(addMatDienBinding.get().tvNgayMayNo.getText().toString(),2);
         final DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                calThoiGianBat.set(Calendar.YEAR,year);calThoiGianBat.set(Calendar.MONTH,monthOfYear);
+                calThoiGianBat.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+                setTimeForTextView(addMatDienBinding.get().tvNgayMayNo,calThoiGianBat,DATETIME);
             }
         };
-
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), mDateSetListener, namMN, thangMN, ngayMN);
-
-        datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Chọn",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_POSITIVE) {
-                            DatePicker datePicker = datePickerDialog.getDatePicker();
-                            addMatDienBinding.get().tvNgayMayNo.
-                                    setText(datePicker.getDayOfMonth() + "/" + (datePicker.getMonth() + 1) + "/" + datePicker.getYear());
-                            ngayMayNo=datePicker.getYear() + "/" + (datePicker.getMonth() + 1) + "/" + datePicker.getDayOfMonth();
-                        }
-                    }
-                });
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Hủy", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), mDateSetListener,
+                calThoiGianBat.get(Calendar.YEAR), calThoiGianBat.get(Calendar.MONTH), calThoiGianBat.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
     @OnClick(R.id.btnNgayNgung)
     public void ChonNgayNgung(){
-        getDate(addMatDienBinding.get().tvNgayNgung.getText().toString(),3);
         final DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                calThoiGianTat.set(Calendar.YEAR,year);calThoiGianTat.set(Calendar.MONTH,monthOfYear);
+                calThoiGianTat.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+                setTimeForTextView(addMatDienBinding.get().tvNgayNgung,calThoiGianTat,DATETIME);
             }
         };
-
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), mDateSetListener, namNG, thangNG, ngayNG);
-
-        datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Chọn",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_POSITIVE) {
-                            DatePicker datePicker = datePickerDialog.getDatePicker();
-                            addMatDienBinding.get().tvNgayNgung.
-                                    setText(datePicker.getDayOfMonth() + "/" + (datePicker.getMonth() + 1) + "/" + datePicker.getYear());
-                            ngayNgung=datePicker.getYear() + "/" + (datePicker.getMonth() + 1) + "/" + datePicker.getDayOfMonth();
-                        }
-                    }
-                });
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Hủy", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), mDateSetListener,
+                calThoiGianTat.get(Calendar.YEAR), calThoiGianTat.get(Calendar.MONTH), calThoiGianTat.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
-    public void getTimeCurrent(){
-        Date c = Calendar.getInstance().getTime();
-        Calendar cc=Calendar.getInstance();
-        cc.setTime(c);
-        ngayCurrent=cc.get(Calendar.DAY_OF_MONTH);
-        thangCurrent=cc.get(Calendar.MONTH)+1;
-        namCurrent=cc.get(Calendar.YEAR);
-        ngayMatDien=namCurrent+"/"+thangCurrent+"/"+ngayCurrent;
-        ngayMayNo=namCurrent+"/"+thangCurrent+"/"+ngayCurrent;
-        ngayNgung=namCurrent+"/"+thangCurrent+"/"+ngayCurrent;
-        addMatDienBinding.get().tvNgayMatDien.setText(ngayCurrent+"/"+thangCurrent+"/"+namCurrent);
-        addMatDienBinding.get().tvNgayMayNo.setText(ngayCurrent+"/"+thangCurrent+"/"+namCurrent);
-        addMatDienBinding.get().tvNgayNgung.setText(ngayCurrent+"/"+thangCurrent+"/"+namCurrent);
-    }
-    public void getDate(String dateStr,int i){
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = new Date();
-        Calendar c = Calendar.getInstance();
-        try {
-            date = format.parse(dateStr);
-            c.setTime(date);
-            switch (i){
-                case 1:
-                    ngayMD=c.get(Calendar.DAY_OF_MONTH);
-                    thangMD=(c.get(Calendar.MONTH));
-                    namMD=c.get(Calendar.YEAR);
-                    break;
-                case 2:
-                    ngayMN=c.get(Calendar.DAY_OF_MONTH);
-                    thangMN=(c.get(Calendar.MONTH));
-                    namMN=c.get(Calendar.YEAR);
-                    break;
-                case 3:
-                    ngayNG=c.get(Calendar.DAY_OF_MONTH);
-                    thangNG=(c.get(Calendar.MONTH));
-                    namNG=c.get(Calendar.YEAR);
-                    break;
-            }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 }

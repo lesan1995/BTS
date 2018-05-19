@@ -20,6 +20,7 @@ import com.example.lequa.bts.db.MatDienDAO;
 import com.example.lequa.bts.db.MyDatabase;
 import com.example.lequa.bts.db.NhaMangDAO;
 import com.example.lequa.bts.db.NhaTramDAO;
+import com.example.lequa.bts.db.NhatKyDAO;
 import com.example.lequa.bts.db.TramDAO;
 import com.example.lequa.bts.db.UserDAO;
 import com.example.lequa.bts.model.Login;
@@ -50,12 +51,13 @@ public class LoginRespository {
     private final TramDAO tramDAO;
     private final UserDAO userDAO;
     private final MatDienDAO matDienDAO;
+    private final NhatKyDAO nhatKyDAO;
     private final MyDatabase myDatabase;
 
     @Inject
     LoginRespository(AppExecutors appExecutors,MyDatabase myDatabase, LoginDAO loginDAO,LoginService loginService,UserService userService,
                      HinhAnhTramDAO hinhAnhTramDAO,NhaMangDAO nhaMangDAO,NhaTramDAO nhaTramDAO,
-                     TramDAO tramDAO,UserDAO userDAO,MatDienDAO matDienDAO){
+                     TramDAO tramDAO,UserDAO userDAO,MatDienDAO matDienDAO,NhatKyDAO nhatKyDAO){
         this.myDatabase=myDatabase;
         this.loginDAO=loginDAO;
         this.hinhAnhTramDAO=hinhAnhTramDAO;
@@ -64,6 +66,7 @@ public class LoginRespository {
         this.tramDAO=tramDAO;
         this.userDAO=userDAO;
         this.matDienDAO=matDienDAO;
+        this.nhatKyDAO=nhatKyDAO;
         this.loginService=loginService;
         this.userService=userService;
         this.appExecutors=appExecutors;
@@ -104,6 +107,7 @@ public class LoginRespository {
                 tramDAO.deleteTable();
                 userDAO.deleteTable();
                 matDienDAO.deleteTable();
+                nhatKyDAO.deleteTable();
             }
 
             @Override

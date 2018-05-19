@@ -18,6 +18,8 @@ public interface NhaMangDAO {
     void save(List<NhaMang> nhaMang);
     @Query("SELECT * FROM NhaMang where iDNhaMang= :idNhaMang")
     LiveData<NhaMang> load(int idNhaMang);
+    @Query("SELECT * FROM NhaMang where tenNhaMang= :tenNhaMang")
+    LiveData<NhaMang> load(String tenNhaMang);
     @Query("SELECT * FROM NhaMang")
     LiveData<List<NhaMang>> load();
     @Query("SELECT * FROM NhaMang where iDNhaMang != :idNhaMang")

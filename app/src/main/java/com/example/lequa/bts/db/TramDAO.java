@@ -27,4 +27,7 @@ public interface TramDAO {
     void delete(int idTram);
     @Query("DELETE FROM Tram")
     void deleteTable();
+
+    @Query("SELECT * FROM Tram WHERE iDTram IN (SELECT iDTram FROM NhaTram where iDNhaMang = :idNhaMang)")
+    LiveData<List<Tram>> loadWithNhaMang(int idNhaMang);
 }

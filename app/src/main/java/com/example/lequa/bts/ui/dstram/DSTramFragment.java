@@ -101,7 +101,7 @@ public class DSTramFragment extends Fragment implements Injectable {
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.menu_tim_kiem, menu);
         MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
         SearchView searchView = (SearchView) myActionMenuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

@@ -8,13 +8,16 @@ import android.util.Log;
 import com.example.lequa.bts.AppExecutors;
 import com.example.lequa.bts.api.ApiResponse;
 import com.example.lequa.bts.api.HinhAnhTramService;
+import com.example.lequa.bts.api.NhaMangService;
 import com.example.lequa.bts.api.TramService;
 import com.example.lequa.bts.api.UserService;
 import com.example.lequa.bts.db.HinhAnhTramDAO;
 import com.example.lequa.bts.db.MyDatabase;
+import com.example.lequa.bts.db.NhaMangDAO;
 import com.example.lequa.bts.db.TramDAO;
 import com.example.lequa.bts.db.UserDAO;
 import com.example.lequa.bts.model.HinhAnhTram;
+import com.example.lequa.bts.model.NhaMang;
 import com.example.lequa.bts.model.Tram;
 import com.example.lequa.bts.model.UserBTS;
 import com.example.lequa.bts.vo.Resource;
@@ -29,17 +32,21 @@ public class MainRespository {
     private final AppExecutors appExecutors;
     private final UserService userService;
     private final TramService tramService;
+    private final NhaMangService nhaMangService;
     private final UserDAO userDAO;
     private final TramDAO tramDAO;
+    private final NhaMangDAO nhaMangDAO;
     private final MyDatabase myDatabase;
     @Inject
-    MainRespository(AppExecutors appExecutors, MyDatabase myDatabase, UserDAO userDAO,TramDAO tramDAO,
-                    UserService userService,TramService tramService){
+    MainRespository(AppExecutors appExecutors, MyDatabase myDatabase, UserDAO userDAO,TramDAO tramDAO,NhaMangDAO nhaMangDAO,
+                    UserService userService,TramService tramService,NhaMangService nhaMangService){
         this.myDatabase=myDatabase;
         this.userDAO=userDAO;
         this.tramDAO=tramDAO;
+        this.nhaMangDAO=nhaMangDAO;
         this.userService=userService;
         this.tramService=tramService;
+        this.nhaMangService=nhaMangService;
         this.appExecutors=appExecutors;
     }
     public LiveData<Resource<UserBTS>> getUser(String email,String token){
@@ -141,6 +148,32 @@ public class MainRespository {
             @Override
             protected LiveData<ApiResponse<List<UserBTS>>> createCall() {
                 return userService.getAllUser("bearer "+token);
+            }
+        }.asLiveData();
+    }
+    public LiveData<Resource<List<NhaMang>>> getListNhaMang(String token){
+        return new NetworkBoundResource<List<NhaMang>,List<NhaMang>>(appExecutors){
+
+            @Override
+            protected void saveCallResult(@NonNull List<NhaMang> item) {
+                nhaMangDAO.save(item);
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable List<NhaMang> data) {
+                return data==null||data.size()==0;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<List<NhaMang>> loadFromDb() {
+                return nhaMangDAO.load();
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<List<NhaMang>>> createCall() {
+                return nhaMangService.getNhaMangs("bearer "+token);
             }
         }.asLiveData();
     }
