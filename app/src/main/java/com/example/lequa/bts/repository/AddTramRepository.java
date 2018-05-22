@@ -12,8 +12,11 @@ import com.example.lequa.bts.db.TramDAO;
 import com.example.lequa.bts.db.UserDAO;
 import com.example.lequa.bts.model.Tram;
 import com.example.lequa.bts.model.UserBTS;
+import com.example.lequa.bts.util.RateLimiter;
 import com.example.lequa.bts.vo.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -25,6 +28,7 @@ public class AddTramRepository {
     private final UserDAO userDAO;
     private final TramDAO tramDAO;
     private final MyDatabase myDatabase;
+    private RateLimiter<String> rateLimit = new RateLimiter<>(20, TimeUnit.SECONDS);
     @Inject
     AddTramRepository(AppExecutors appExecutors, MyDatabase myDatabase, UserDAO userDAO,TramDAO tramDAO,
                     UserService userService,TramService tramService){
@@ -45,7 +49,7 @@ public class AddTramRepository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<UserBTS> data) {
-                return true;
+                return data==null||data.isEmpty()||rateLimit.shouldFetch("AddTram");
             }
 
             @NonNull

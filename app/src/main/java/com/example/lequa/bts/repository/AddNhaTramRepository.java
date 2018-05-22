@@ -14,9 +14,11 @@ import com.example.lequa.bts.db.NhaMangDAO;
 import com.example.lequa.bts.db.NhaTramDAO;
 import com.example.lequa.bts.model.NhaMang;
 import com.example.lequa.bts.model.NhaTram;
+import com.example.lequa.bts.util.RateLimiter;
 import com.example.lequa.bts.vo.Resource;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -29,6 +31,7 @@ public class AddNhaTramRepository {
     private final NhaTramDAO nhaTramDAO;
     private final NhaMangDAO nhaMangDAO;
     private final MyDatabase myDatabase;
+    private RateLimiter<String> rateLimit = new RateLimiter<>(20, TimeUnit.SECONDS);
     @Inject
     AddNhaTramRepository(AppExecutors appExecutors, MyDatabase myDatabase,NhaTramDAO nhaTramDAO, NhaMangDAO nhaMangDAO,
                     NhaTramService nhaTramService, NhaMangService nhaMangService){
@@ -49,7 +52,7 @@ public class AddNhaTramRepository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<NhaMang> data) {
-                return data==null||data.size()==0;
+                return data==null||data.isEmpty()||rateLimit.shouldFetch("AddNhaTram");
             }
 
             @NonNull

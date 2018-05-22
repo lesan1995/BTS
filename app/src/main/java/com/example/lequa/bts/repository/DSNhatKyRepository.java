@@ -10,9 +10,11 @@ import com.example.lequa.bts.api.NhatKyService;
 import com.example.lequa.bts.db.MyDatabase;
 import com.example.lequa.bts.db.NhatKyDAO;
 import com.example.lequa.bts.model.NhatKy;
+import com.example.lequa.bts.util.RateLimiter;
 import com.example.lequa.bts.vo.Resource;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -23,6 +25,7 @@ public class DSNhatKyRepository {
     private final NhatKyService nhatKyService;
     private final NhatKyDAO nhatKyDAO;
     private final MyDatabase myDatabase;
+    private RateLimiter<String> rateLimit = new RateLimiter<>(20, TimeUnit.SECONDS);
     @Inject
     DSNhatKyRepository(AppExecutors appExecutors, MyDatabase myDatabase, NhatKyDAO nhatKyDAO,
                        NhatKyService nhatKyService){
@@ -41,7 +44,7 @@ public class DSNhatKyRepository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<NhatKy> data) {
-                return data==null||data.size()==0;
+                return data==null||data.isEmpty()|rateLimit.shouldFetch("DSNhatKy");
             }
 
             @NonNull

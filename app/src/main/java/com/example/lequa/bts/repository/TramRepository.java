@@ -22,9 +22,11 @@ import com.example.lequa.bts.model.Tram;
 import com.example.lequa.bts.model.UserBTS;
 import com.example.lequa.bts.tinh.Tinh;
 import com.example.lequa.bts.tinh.TinhUtil;
+import com.example.lequa.bts.util.RateLimiter;
 import com.example.lequa.bts.vo.Resource;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,6 +43,7 @@ public class TramRepository {
     private final NhaTramDAO nhaTramDAO;
     private final NhaMangDAO nhaMangDAO;
     private final MyDatabase myDatabase;
+    private RateLimiter<String> rateLimit = new RateLimiter<>(20, TimeUnit.SECONDS);
     @Inject
     TramRepository(AppExecutors appExecutors, MyDatabase myDatabase, UserDAO userDAO, TramDAO tramDAO,
                    NhaTramDAO nhaTramDAO, NhaMangDAO nhaMangDAO,
@@ -118,7 +121,7 @@ public class TramRepository {
             }
             @Override
             protected boolean shouldFetch(@Nullable List<NhaTram> data) {
-                return data==null||data.size()==0;
+                return data==null||data.isEmpty()||rateLimit.shouldFetch("TramGetListNhaTram");
             }
             @NonNull
             @Override
@@ -221,7 +224,7 @@ public class TramRepository {
             @Override
             protected boolean shouldFetch(@Nullable List<UserBTS> data) {
                 Log.d("TramRepository","shouldFetch");
-                return true;
+                return data==null||data.isEmpty()||rateLimit.shouldFetch("TramGetAllUser");
             }
 
             @NonNull
@@ -249,7 +252,7 @@ public class TramRepository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<NhaMang> data) {
-                return data==null||data.size()==0;
+                return data==null||data.isEmpty()||rateLimit.shouldFetch("TramGetListNhaMang");
             }
 
             @NonNull

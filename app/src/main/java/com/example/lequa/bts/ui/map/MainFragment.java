@@ -121,6 +121,8 @@ public class MainFragment extends Fragment
     List<UserBTS> listUser=new ArrayList<>();
     List<Tram> listTram=new ArrayList<>();
 
+    private static String tokenTMP,emailTMP,chucVuTMP;
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -131,6 +133,11 @@ public class MainFragment extends Fragment
         adapter=new ArrayAdapter<Tram>(getActivity(), android.R.layout.simple_dropdown_item_1line, listTram);
 
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel.class);
+
+        tokenTMP=getArguments().getString(MAIN_TOKEN_KEY);
+        emailTMP=getArguments().getString(MAIN_EMAIL_KEY);
+        chucVuTMP=getArguments().getString(MAIN_CV_KEY);
+
         mainViewModel.setUser(getArguments().getString(MAIN_EMAIL_KEY), getArguments().getString(MAIN_TOKEN_KEY));
         mainViewModel.getUser().observe(this, user -> {
             navBinding.get().setUser(user.data);
@@ -237,8 +244,9 @@ public class MainFragment extends Fragment
 //        } else if (id == R.id.nav_tim_nang_cao) {
 //            //showNhaMang();
 //
-//        } else if (id == R.id.nav_mat_dien) {
-//
+//        }
+//        else if (id == R.id.nav_mat_dien) {
+//            navigationController.navigateToThongKe();
 //        }
         else if (id == R.id.nav_bao_cao) {
             navigationController.navigateToBaoCao(getArguments().getString(MAIN_CV_KEY),getArguments().getString(MAIN_TOKEN_KEY));
@@ -320,9 +328,18 @@ public class MainFragment extends Fragment
                 .target(sydney)
                 .zoom(zoom)
                 .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+        //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
     }
-
+    public static MainFragment create() {
+        MainFragment mainFragment = new MainFragment();
+        Bundle args = new Bundle();
+        args.putString(MAIN_EMAIL_KEY, emailTMP);
+        args.putString(MAIN_TOKEN_KEY, tokenTMP);
+        args.putString(MAIN_CV_KEY, chucVuTMP);
+        mainFragment.setArguments(args);
+        return mainFragment;
+    }
     public static MainFragment create(String email, String token,String chucVu) {
         MainFragment mainFragment = new MainFragment();
         Bundle args = new Bundle();
@@ -376,18 +393,24 @@ public class MainFragment extends Fragment
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_user);
         icon = Bitmap.createScaledBitmap(icon, 50, 50, false);
         for (UserBTS item : listUser) {
-            String toaDo=item.getDiaChi().substring(item.getDiaChi().indexOf("|")+1);
-            Double viDo=Double.parseDouble(toaDo.substring(0,toaDo.indexOf(",")));
-            Double kinhDo=Double.parseDouble(toaDo.substring(toaDo.indexOf(",")+1));
-            LatLng sydney = new LatLng(viDo, kinhDo);
+            try{
+                String toaDo=item.getDiaChi().substring(item.getDiaChi().indexOf("|")+1);
+                Double viDo=Double.parseDouble(toaDo.substring(0,toaDo.indexOf(",")));
+                Double kinhDo=Double.parseDouble(toaDo.substring(toaDo.indexOf(",")+1));
+                LatLng sydney = new LatLng(viDo, kinhDo);
 
-            mMap.addMarker(new MarkerOptions()
-                    .position(sydney)
-                    .title(item.getTen())
-                    .snippet("user:"+item.getIDUser())
-                    .icon(BitmapDescriptorFactory.fromBitmap(icon))
+                mMap.addMarker(new MarkerOptions()
+                        .position(sydney)
+                        .title(item.getTen())
+                        .snippet("user:"+item.getIDUser())
+                        .icon(BitmapDescriptorFactory.fromBitmap(icon))
 
-            );
+                );
+            }catch (Exception e){
+
+            }
+
+
         }
     }
 

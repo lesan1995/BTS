@@ -168,12 +168,18 @@ public class TramFragment extends Fragment implements Injectable{
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = getFragmentManager();
-                if (fm.getBackStackEntryCount() > 0) {
-                    fm.popBackStack();
-                } else {
-                    getActivity().onBackPressed();
+                if(getArguments().getString(TRAM_CV_KEY)!=null){
+                    navigationController.navigateToHome();
                 }
+                else{
+                    FragmentManager fm = getFragmentManager();
+                    if (fm.getBackStackEntryCount() > 0) {
+                        fm.popBackStack();
+                    } else {
+                        getActivity().onBackPressed();
+                    }
+                }
+
             }
         });
     }

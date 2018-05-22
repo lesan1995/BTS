@@ -27,6 +27,7 @@ import com.example.lequa.bts.ui.map.MainFragment;
 import com.example.lequa.bts.ui.nhatky.NhatKyFragment;
 import com.example.lequa.bts.ui.nhatram.NhaTramFragment;
 import com.example.lequa.bts.ui.taikhoan.TaiKhoanFragment;
+import com.example.lequa.bts.ui.thongke.ThongKeFragment;
 import com.example.lequa.bts.ui.thongtin.ThongTinFragment;
 import com.example.lequa.bts.ui.toado.ToaDo;
 import com.example.lequa.bts.ui.tram.TramFragment;
@@ -48,6 +49,14 @@ public class NavigationController {
         LoginFragment loginFragment = LoginFragment.create(dangXuat);
         fragmentManager.beginTransaction()
                 .replace(containerId, loginFragment, tag)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+    public void navigateToHome() {
+        String tag = "backtohome" ;
+        MainFragment mainFragment = MainFragment.create();
+        fragmentManager.beginTransaction()
+                .replace(containerId, mainFragment, tag)
                 .addToBackStack(null)
                 .commitAllowingStateLoss();
     }
@@ -256,6 +265,14 @@ public class NavigationController {
         ThongTinFragment thongTinFragment = ThongTinFragment.create();
         fragmentManager.beginTransaction()
                 .replace(containerId, thongTinFragment, tag)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+    public void navigateToThongKe() {
+        String tag = "thongke";
+        ThongKeFragment thongKeFragment = ThongKeFragment.create();
+        fragmentManager.beginTransaction()
+                .replace(containerId, thongKeFragment, tag)
                 .addToBackStack(null)
                 .commitAllowingStateLoss();
     }

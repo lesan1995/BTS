@@ -471,18 +471,23 @@ public class EditToaDoFragment extends Fragment implements
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_user);
         icon = Bitmap.createScaledBitmap(icon, 50, 50, false);
         for (UserBTS item : listUser) {
-            String toaDo=item.getDiaChi().substring(item.getDiaChi().indexOf("|")+1);
-            Double viDo=Double.parseDouble(toaDo.substring(0,toaDo.indexOf(",")));
-            Double kinhDo=Double.parseDouble(toaDo.substring(toaDo.indexOf(",")+1));
-            LatLng sydney = new LatLng(viDo, kinhDo);
+            try{
+                String toaDo=item.getDiaChi().substring(item.getDiaChi().indexOf("|")+1);
+                Double viDo=Double.parseDouble(toaDo.substring(0,toaDo.indexOf(",")));
+                Double kinhDo=Double.parseDouble(toaDo.substring(toaDo.indexOf(",")+1));
+                LatLng sydney = new LatLng(viDo, kinhDo);
 
-            mMap.addMarker(new MarkerOptions()
-                    .position(sydney)
-                    .title(item.getTen())
-                    .snippet("user:"+item.getIDUser())
-                    .icon(BitmapDescriptorFactory.fromBitmap(icon))
+                mMap.addMarker(new MarkerOptions()
+                        .position(sydney)
+                        .title(item.getTen())
+                        .snippet("user:"+item.getIDUser())
+                        .icon(BitmapDescriptorFactory.fromBitmap(icon))
 
-            );
+                );
+            }catch (Exception e){
+
+            }
+
         }
     }
     public void zoomToaDo(){

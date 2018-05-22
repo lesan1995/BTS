@@ -22,6 +22,7 @@ import com.example.lequa.bts.ui.map.MainFragment;
 import com.example.lequa.bts.ui.nhatky.NhatKyFragment;
 import com.example.lequa.bts.ui.nhatram.NhaTramFragment;
 import com.example.lequa.bts.ui.taikhoan.TaiKhoanFragment;
+import com.example.lequa.bts.ui.thongke.ThongKeFragment;
 import com.example.lequa.bts.ui.thongtin.ThongTinFragment;
 import com.example.lequa.bts.ui.toado.ToaDo;
 import com.example.lequa.bts.ui.tram.TramFragment;
@@ -81,5 +82,7 @@ public abstract class FragmentBuildersModule {
     abstract AddNhatKyFragment contributeAddNhatKyFragment();
     @ContributesAndroidInjector
     abstract ThongTinFragment contributeThongTinFragment();
+    @ContributesAndroidInjector
+    abstract ThongKeFragment contributeThongKeFragment();
 
 }

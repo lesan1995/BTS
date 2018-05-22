@@ -94,6 +94,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-core:2.9.5'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.5'
 
+   // compile files('libs/MPAndroidChart-v3.0.1.jar')
+
 
 }
 gradle.projectsEvaluated {

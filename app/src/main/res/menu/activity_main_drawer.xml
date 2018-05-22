@@ -28,6 +28,10 @@
                 android:id="@+id/nav_bao_cao"
                 android:icon="@drawable/ic_menu_bao_cao"
                 android:title="Báo Cáo" />
+            <!--<item-->
+                <!--android:id="@+id/nav_mat_dien"-->
+                <!--android:icon="@drawable/ic_menu_mat_dien"-->
+                <!--android:title="Mất Điện" />-->
         </menu>
     </item>
     <item android:title="Công Cụ">

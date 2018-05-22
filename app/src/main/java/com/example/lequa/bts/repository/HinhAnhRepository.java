@@ -9,8 +9,11 @@ import com.example.lequa.bts.api.HinhAnhTramService;
 import com.example.lequa.bts.db.HinhAnhTramDAO;
 import com.example.lequa.bts.db.MyDatabase;
 import com.example.lequa.bts.model.HinhAnhTram;
+import com.example.lequa.bts.util.RateLimiter;
 import com.example.lequa.bts.vo.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -23,6 +26,7 @@ public class HinhAnhRepository {
     private final HinhAnhTramDAO hinhAnhTramDAO;
     private final HinhAnhTramService hinhAnhTramService;
     private final MyDatabase myDatabase;
+    private RateLimiter<String> rateLimit = new RateLimiter<>(20, TimeUnit.SECONDS);
     @Inject
     HinhAnhRepository(AppExecutors appExecutors, MyDatabase myDatabase,
                       HinhAnhTramDAO hinhAnhTramDAO,HinhAnhTramService hinhAnhTramService){
@@ -41,8 +45,7 @@ public class HinhAnhRepository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<HinhAnhTram> data) {
-                //return data==null||data.size()==0;
-                return true;
+                return data==null||data.isEmpty()||rateLimit.shouldFetch("HinhAnh");
             }
 
             @NonNull

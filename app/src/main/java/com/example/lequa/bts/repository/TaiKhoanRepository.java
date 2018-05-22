@@ -11,9 +11,11 @@ import com.example.lequa.bts.api.UserService;
 import com.example.lequa.bts.db.MyDatabase;
 import com.example.lequa.bts.db.UserDAO;
 import com.example.lequa.bts.model.UserBTS;
+import com.example.lequa.bts.util.RateLimiter;
 import com.example.lequa.bts.vo.Resource;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,6 +26,7 @@ public class TaiKhoanRepository {
     private final UserService userService;
     private final UserDAO userDAO;
     private final MyDatabase myDatabase;
+    private RateLimiter<String> rateLimit = new RateLimiter<>(20, TimeUnit.SECONDS);
     @Inject
     TaiKhoanRepository(AppExecutors appExecutors, MyDatabase myDatabase, UserDAO userDAO, UserService userService){
         this.myDatabase=myDatabase;
@@ -43,7 +46,7 @@ public class TaiKhoanRepository {
             @Override
             protected boolean shouldFetch(@Nullable List<UserBTS> data) {
                 Log.d("TramRepository","shouldFetch");
-                return true;
+                return data==null||data.isEmpty()||rateLimit.shouldFetch("TaiKhoan");
             }
 
             @NonNull

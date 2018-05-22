@@ -20,9 +20,11 @@ import com.example.lequa.bts.model.HinhAnhTram;
 import com.example.lequa.bts.model.NhaMang;
 import com.example.lequa.bts.model.Tram;
 import com.example.lequa.bts.model.UserBTS;
+import com.example.lequa.bts.util.RateLimiter;
 import com.example.lequa.bts.vo.Resource;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,6 +39,7 @@ public class MainRespository {
     private final TramDAO tramDAO;
     private final NhaMangDAO nhaMangDAO;
     private final MyDatabase myDatabase;
+    private RateLimiter<String> rateLimit = new RateLimiter<>(20, TimeUnit.SECONDS);
     @Inject
     MainRespository(AppExecutors appExecutors, MyDatabase myDatabase, UserDAO userDAO,TramDAO tramDAO,NhaMangDAO nhaMangDAO,
                     UserService userService,TramService tramService,NhaMangService nhaMangService){
@@ -83,7 +86,7 @@ public class MainRespository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<Tram> data) {
-                return data.size()==0;
+                return data==null||data.isEmpty()||rateLimit.shouldFetch("MainGetListTram");
             }
 
             @NonNull
@@ -135,7 +138,7 @@ public class MainRespository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<UserBTS> data) {
-                return true;
+                return data==null||data.isEmpty()||rateLimit.shouldFetch("MainGetAllUser");
             }
 
             @NonNull
@@ -161,7 +164,7 @@ public class MainRespository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<NhaMang> data) {
-                return data==null||data.size()==0;
+                return data==null||data.isEmpty()||rateLimit.shouldFetch("MainGetListNhaMang");
             }
 
             @NonNull

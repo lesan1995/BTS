@@ -13,9 +13,11 @@ import com.example.lequa.bts.db.TramDAO;
 import com.example.lequa.bts.db.UserDAO;
 import com.example.lequa.bts.model.Tram;
 import com.example.lequa.bts.model.UserBTS;
+import com.example.lequa.bts.util.RateLimiter;
 import com.example.lequa.bts.vo.Resource;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,6 +30,7 @@ public class EditToaDoRepository {
     private final UserDAO userDAO;
     private final TramDAO tramDAO;
     private final MyDatabase myDatabase;
+    private RateLimiter<String> rateLimit = new RateLimiter<>(20, TimeUnit.SECONDS);
     @Inject
     EditToaDoRepository(AppExecutors appExecutors, MyDatabase myDatabase,TramDAO tramDAO,UserDAO userDAO,
                     UserService userService,TramService tramService){
@@ -74,7 +77,7 @@ public class EditToaDoRepository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<Tram> data) {
-                return data.size()==0;
+                return data==null||data.isEmpty()||rateLimit.shouldFetch("EditToaDo");
             }
 
             @NonNull
@@ -126,7 +129,7 @@ public class EditToaDoRepository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<UserBTS> data) {
-                return true;
+                return data==null||data.isEmpty()||rateLimit.shouldFetch("EditToaDoGetAllUser");
             }
 
             @NonNull

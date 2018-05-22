@@ -91,13 +91,13 @@
                     android:layout_gravity="center"
                     android:background="@android:color/holo_orange_dark"
                     android:textColor="#ffffff"/>
-                <TextView
-                    android:id="@+id/tvForgotPassword"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/holo_orange_dark"
-                    android:text="Forgot Password?"/>
+                <!--<TextView-->
+                    <!--android:id="@+id/tvForgotPassword"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@android:color/holo_orange_dark"-->
+                    <!--android:text="Forgot Password?"/>-->
 
             </LinearLayout>
 

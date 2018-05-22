@@ -12,8 +12,11 @@ import com.example.lequa.bts.db.MyDatabase;
 import com.example.lequa.bts.db.TramDAO;
 import com.example.lequa.bts.model.MatDien;
 import com.example.lequa.bts.model.Tram;
+import com.example.lequa.bts.util.RateLimiter;
 import com.example.lequa.bts.vo.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -23,6 +26,7 @@ public class DSMatDienRepository {
     private final MatDienService matDienService;
     private final MatDienDAO matDienDAO;
     private final MyDatabase myDatabase;
+    private RateLimiter<String> rateLimit = new RateLimiter<>(20, TimeUnit.SECONDS);
     @Inject
     DSMatDienRepository(AppExecutors appExecutors, MyDatabase myDatabase, TramDAO tramDAO, MatDienDAO matDienDAO,
                         TramService tramService,MatDienService matDienService){
@@ -41,7 +45,7 @@ public class DSMatDienRepository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<MatDien> data) {
-                return data==null||data.size()==0;
+                return data==null||data.isEmpty()||rateLimit.shouldFetch("DSMatDien");
             }
 
             @NonNull
